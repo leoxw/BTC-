@@ -337,9 +337,9 @@ const App: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <StatsCard label={t.peakVisible} value={`$${Math.max(...displayHistory.map(d => d.price), 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`} subValue={t.subPeak} />
-            <StatsCard label={t.datasetLow} value={`$${Math.min(...displayHistory.map(d => d.price), Infinity).toLocaleString(undefined, { maximumFractionDigits: 0 })}`} subValue={t.subLow} />
-            <StatsCard label={t.marketCap} value={`$${((stats?.marketCap || 0) / 1e12).toFixed(2)}T`} subValue={t.subCap} />
+            <StatsCard label={t.statHigh1y} value={`$${(stats?.high1y || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`} subValue={stats?.high1yDate || '-'} />
+            <StatsCard label={t.statLow1y} value={`$${(stats?.low1y || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`} subValue={stats?.low1yDate || '-'} />
+            <StatsCard label={t.statHighCap1y} value={`$${((stats?.highMarketCap1y || 0) / 1e12).toFixed(2)}T`} subValue={stats?.highMarketCap1yDate || '-'} />
           </div>
         </div>
       </main>

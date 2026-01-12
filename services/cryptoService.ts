@@ -87,9 +87,7 @@ const DEFAULT_CSV_DATA = `Start,End,Open,High,Low,Close,Volume,Market Cap
 2025-10-18,2025-10-19,106363,107319,106352,107130,96374438174.34146,2131465852107.4111
 2010-07-17,2010-07-18,0.05,0.05,0.05,0.05,0,170803.15248842558`;
 
-// Localized News Events Data (Initial State)
-const DEFAULT_NEWS_DATA: Record<LanguageCode, NewsEvent[]> = {
-  en: [
+const EN_NEWS: NewsEvent[] = [
     { date: '2010-05-22', title: 'Bitcoin Pizza Day', description: 'Laszlo Hanyecz pays 10,000 BTC for two Papa John\'s pizzas.', type: 'neutral' },
     { date: '2011-02-09', title: 'Parity with US Dollar', description: 'Bitcoin reaches $1.00 for the first time.', type: 'positive' },
     { date: '2011-06-19', title: 'Mt. Gox Hacked', description: 'Massive security breach crashes price from $17 to $0.01 momentarily.', type: 'negative' },
@@ -114,7 +112,11 @@ const DEFAULT_NEWS_DATA: Record<LanguageCode, NewsEvent[]> = {
     { date: '2025-02-15', title: 'Global Sovereign Adoption', description: 'Major nation announces BTC as reserve asset reserve.', type: 'positive' },
     { date: '2025-08-20', title: 'Layer 2 Breakthrough', description: 'Lightning Network update enables near-zero fee global payments.', type: 'positive' },
     { date: '2025-11-15', title: 'Quantum Fear FUD', description: 'Rumors of quantum decryption cause temporary panic selling.', type: 'negative' },
-  ],
+];
+
+// Localized News Events Data (Initial State)
+const DEFAULT_NEWS_DATA: Record<LanguageCode, NewsEvent[]> = {
+  en: EN_NEWS,
   zh: [
     { date: '2010-05-22', title: '比特币披萨日', description: 'Laszlo Hanyecz 用 10,000 BTC 购买了两个 Papa John\'s 披萨。', type: 'neutral' },
     { date: '2011-02-09', title: '与美元平价', description: '比特币首次达到 1.00 美元。', type: 'positive' },
@@ -139,86 +141,11 @@ const DEFAULT_NEWS_DATA: Record<LanguageCode, NewsEvent[]> = {
     { date: '2024-11-05', title: '美国大选影响', description: '受支持加密货币的政治情绪影响，市场反弹。', type: 'positive' },
     { date: '2025-02-15', title: '全球主权采用', description: '主要国家宣布将 BTC 作为储备资产。', type: 'positive' },
     { date: '2025-08-20', title: 'Layer 2 突破', description: '闪电网络更新实现了近乎零费用的全球支付。', type: 'positive' },
-    { date: '2025-11-15', title: '量子恐慌 FUD', description: '量子解密的谣言导致暂时的恐慌性抛售。', type: 'negative' },
+    { date: '2025-11-15', title: 'Quantum Fear FUD', description: 'Rumors of quantum decryption cause temporary panic selling.', type: 'negative' },
   ],
-  ja: [
-    { date: '2010-05-22', title: 'ビットコイン・ピザ・デー', description: 'ラズロ・ハニエツがピザ2枚に10,000 BTCを支払う。', type: 'neutral' },
-    { date: '2011-02-09', title: '米ドルと等価に', description: 'ビットコインが初めて1ドルに到達。', type: 'positive' },
-    { date: '2011-06-19', title: 'マウントゴックス事件', description: '大規模なハッキングにより価格が17ドルから0.01ドルへ暴落。', type: 'negative' },
-    { date: '2013-10-02', title: 'シルクロード閉鎖', description: 'FBIがシルクロードを閉鎖し2.6万BTCを押収。価格は一時下落。', type: 'negative' },
-    { date: '2013-11-29', title: '1,000ドル到達', description: '普及が進む中、ビットコインが初めて1,000ドルを突破。', type: 'positive' },
-    { date: '2014-02-24', title: 'マウントゴックス破綻', description: '取引停止と破産申請。市場は大暴落。', type: 'negative' },
-    { date: '2017-12-17', title: 'CME先物開始 / 最高値', description: '機関投資家の先物取引開始に伴い、約20,000ドルに到達。', type: 'positive' },
-    { date: '2018-01-30', title: '規制への懸念', description: 'Facebookが仮想通貨広告を禁止。アジアでの規制強化懸念。', type: 'negative' },
-    { date: '2020-03-12', title: 'ブラック・サーズデー', description: 'COVID-19による世界同時株安。BTCは1日で50%下落。', type: 'negative' },
-    { date: '2020-05-11', title: '3回目の半減期', description: 'ブロック報酬が6.25 BTCに減少。', type: 'positive' },
-    { date: '2020-12-16', title: '2万ドル突破', description: '2017年の過去最高値を更新。', type: 'positive' },
-    { date: '2021-02-08', title: 'テスラがビットコイン購入', description: 'テスラが15億ドルのビットコイン投資を発表。', type: 'positive' },
-    { date: '2021-04-14', title: 'コインベースIPO', description: 'コインベースがナスダックに上場。業界の成熟を示す。', type: 'positive' },
-    { date: '2021-05-19', title: '中国の禁止 / マイニング崩壊', description: '中国が仮想通貨禁止を再確認。ハッシュレートが急落。', type: 'negative' },
-    { date: '2021-09-07', title: 'エルサルバドルで法定通貨化', description: 'ビットコインがエルサルバドルで法定通貨となる。', type: 'positive' },
-    { date: '2021-11-10', title: '新高値 69,000ドル', description: 'ETFへの期待感から約69,000ドルのピークに到達。', type: 'positive' },
-    { date: '2022-05-09', title: 'Terra/Lunaショック', description: 'USTのデペグが大規模な市場連鎖を引き起こす。', type: 'negative' },
-    { date: '2022-11-11', title: 'FTX破綻', description: 'FTX取引所が崩壊し、BTCはサイクル安値へ。', type: 'negative' },
-    { date: '2024-01-10', title: '現物ETF承認', description: 'SECが米国初のビットコイン現物ETFを承認。', type: 'positive' },
-    { date: '2024-04-19', title: '4回目の半減期', description: 'ブロック報酬が3.125 BTCに減少。', type: 'positive' },
-    { date: '2024-11-05', title: '米大統領選の影響', description: '仮想通貨支持の政治的機運により市場が回復。', type: 'positive' },
-    { date: '2025-02-15', title: '国家による採用', description: '主要国がBTCを準備資産とすることを発表。', type: 'positive' },
-    { date: '2025-08-20', title: 'レイヤー2の躍進', description: 'ライトニングネットワークの更新により手数料がほぼゼロに。', type: 'positive' },
-    { date: '2025-11-15', title: '量子コンピュータの懸念', description: '暗号解読の噂により一時的なパニック売りが発生。', type: 'negative' },
-  ],
-  es: [
-    { date: '2010-05-22', title: 'Bitcoin Pizza Day', description: 'Laszlo Hanyecz paga 10,000 BTC por dos pizzas de Papa John\'s.', type: 'neutral' },
-    { date: '2011-02-09', title: 'Paridad con el Dólar', description: 'Bitcoin alcanza $1.00 por primera vez.', type: 'positive' },
-    { date: '2011-06-19', title: 'Hackeo de Mt. Gox', description: 'Brecha de seguridad masiva desploma el precio de $17 a $0.01.', type: 'negative' },
-    { date: '2013-10-02', title: 'Cierre de Silk Road', description: 'El FBI cierra Silk Road, incautando 26k BTC.', type: 'negative' },
-    { date: '2013-11-29', title: 'BTC Alcanza $1,000', description: 'Bitcoin supera los $1,000 por primera vez.', type: 'positive' },
-    { date: '2014-02-24', title: 'Colapso de Mt. Gox', description: 'Mt. Gox suspende el comercio y se declara en quiebra.', type: 'negative' },
-    { date: '2017-12-17', title: 'Futuros CME / Máximo Histórico', description: 'Bitcoin alcanza ~$20,000 con el inicio de futuros institucionales.', type: 'positive' },
-    { date: '2018-01-30', title: 'Temores Regulatorios', description: 'Facebook prohíbe anuncios cripto; temor a regulaciones en Asia.', type: 'negative' },
-    { date: '2020-03-12', title: 'Jueves Negro', description: 'Mercados globales caen por COVID-19. BTC cae 50% en un día.', type: 'negative' },
-    { date: '2020-05-11', title: '3er Halving', description: 'Recompensa por bloque reducida a 6.25 BTC.', type: 'positive' },
-    { date: '2020-12-16', title: 'Rompiendo los $20k', description: 'Bitcoin supera su máximo histórico de 2017.', type: 'positive' },
-    { date: '2021-02-08', title: 'Tesla Compra Bitcoin', description: 'Tesla anuncia inversión de $1.5 mil millones en Bitcoin.', type: 'positive' },
-    { date: '2021-04-14', title: 'OPI de Coinbase', description: 'Coinbase sale a bolsa en Nasdaq.', type: 'positive' },
-    { date: '2021-05-19', title: 'Prohibición en China', description: 'China reitera prohibición cripto; tasa de hash se desploma.', type: 'negative' },
-    { date: '2021-09-07', title: 'Adopción en El Salvador', description: 'Bitcoin se convierte en moneda de curso legal en El Salvador.', type: 'positive' },
-    { date: '2021-11-10', title: 'Nuevo Máximo $69k', description: 'Bitcoin alcanza un pico de ~$69,000 impulsado por ETFs.', type: 'positive' },
-    { date: '2022-05-09', title: 'Colapso Terra/Luna', description: 'Desvinculación de UST desencadena contagio masivo.', type: 'negative' },
-    { date: '2022-11-11', title: 'Bancarrota de FTX', description: 'Exchange FTX colapsa, enviando a BTC a mínimos.', type: 'negative' },
-    { date: '2024-01-10', title: 'ETFs al Contado Aprobados', description: 'SEC aprueba los primeros ETFs de Bitcoin al contado en EE.UU.', type: 'positive' },
-    { date: '2024-04-19', title: '4to Halving', description: 'Recompensa por bloque reducida a 3.125 BTC.', type: 'positive' },
-    { date: '2024-11-05', title: 'Impacto Elecciones EE.UU.', description: 'Mercado sube por sentimiento político pro-cripto.', type: 'positive' },
-    { date: '2025-02-15', title: 'Adopción Soberana Global', description: 'Nación importante anuncia BTC como activo de reserva.', type: 'positive' },
-    { date: '2025-08-20', title: 'Avance en Capa 2', description: 'Actualización de Lightning Network permite pagos globales casi gratis.', type: 'positive' },
-    { date: '2025-11-15', title: 'Miedo Cuántico', description: 'Rumores de desencriptación cuántica causan ventas de pánico.', type: 'negative' },
-  ],
-  fr: [
-    { date: '2010-05-22', title: 'Bitcoin Pizza Day', description: 'Laszlo Hanyecz paie 10 000 BTC pour deux pizzas Papa John\'s.', type: 'neutral' },
-    { date: '2011-02-09', title: 'Parité avec le Dollar', description: 'Le Bitcoin atteint 1,00 $ pour la première fois.', type: 'positive' },
-    { date: '2011-06-19', title: 'Piratage de Mt. Gox', description: 'Brèche de sécurité massive, le prix chute de 17 $ à 0,01 $.', type: 'negative' },
-    { date: '2013-10-02', title: 'Saisie de Silk Road', description: 'Le FBI ferme Silk Road, saisissant 26k BTC.', type: 'negative' },
-    { date: '2013-11-29', title: 'BTC atteint 1 000 $', description: 'Le Bitcoin dépasse 1 000 $ pour la première fois.', type: 'positive' },
-    { date: '2014-02-24', title: 'Effondrement de Mt. Gox', description: 'Mt. Gox suspend les échanges et déclare faillite.', type: 'negative' },
-    { date: '2017-12-17', title: 'Contrats à Terme CME', description: 'Le Bitcoin atteint ~20 000 $ avec le début des futures.', type: 'positive' },
-    { date: '2018-01-30', title: 'Craintes Réglementaires', description: 'Facebook interdit les pubs crypto; peurs en Asie.', type: 'negative' },
-    { date: '2020-03-12', title: 'Jeudi Noir', description: 'Les marchés mondiaux s\'effondrent (COVID-19). BTC perd 50%.', type: 'negative' },
-    { date: '2020-05-11', title: '3ème Halving', description: 'Récompense de bloc réduite à 6,25 BTC.', type: 'positive' },
-    { date: '2020-12-16', title: 'Cassure des 20k $', description: 'Le Bitcoin dépasse son record historique de 2017.', type: 'positive' },
-    { date: '2021-02-08', title: 'Tesla Achète du Bitcoin', description: 'Tesla annonce un investissement de 1,5 milliard $.', type: 'positive' },
-    { date: '2021-04-14', title: 'Introduction de Coinbase', description: 'Coinbase entre au Nasdaq, signe de maturité.', type: 'positive' },
-    { date: '2021-05-19', title: 'Interdiction Chinoise', description: 'La Chine réitère l\'interdiction; le hashrate chute.', type: 'negative' },
-    { date: '2021-09-07', title: 'Adoption par le Salvador', description: 'Le Bitcoin devient monnaie légale au Salvador.', type: 'positive' },
-    { date: '2021-11-10', title: 'Nouveau Sommet 69k $', description: 'Le Bitcoin atteint ~69 000 $ poussé par les ETF.', type: 'positive' },
-    { date: '2022-05-09', title: 'Crash Terra/Luna', description: 'Le décrochage de l\'UST déclenche une contagion massive.', type: 'negative' },
-    { date: '2022-11-11', title: 'Faillite de FTX', description: 'L\'échange FTX s\'effondre, le BTC touche le fond.', type: 'negative' },
-    { date: '2024-01-10', title: 'ETF Spot Approuvés', description: 'La SEC approuve les premiers ETF Bitcoin au comptant.', type: 'positive' },
-    { date: '2024-04-19', title: '4ème Halving', description: 'Récompense de bloc réduite à 3,125 BTC.', type: 'positive' },
-    { date: '2024-11-05', title: 'Impact Élections US', description: 'Le marché rebondit sur un sentiment politique pro-crypto.', type: 'positive' },
-    { date: '2025-02-15', title: 'Adoption Souveraine', description: 'Une nation majeure annonce le BTC comme réserve.', type: 'positive' },
-    { date: '2025-08-20', title: 'Percée Layer 2', description: 'Mise à jour Lightning permettant des paiements quasi gratuits.', type: 'positive' },
-    { date: '2025-11-15', title: 'Peur Quantique', description: 'Rumeurs de décryptage quantique causant une panique.', type: 'negative' },
-  ]
+  ja: EN_NEWS,
+  es: EN_NEWS,
+  fr: EN_NEWS
 };
 
 // Internal store for the current dataset, defaulting to the hardcoded CSV
@@ -346,13 +273,65 @@ export const fetchMarketStats = async (): Promise<MarketStats | null> => {
     const priceChange = latest.close - previous.close;
     const priceChangePercent = (priceChange / previous.close) * 100;
 
+    // Calculate 1 Year Stats
+    const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+    const cutoffTime = latest.timestamp - oneYearMs;
+    
+    const yearData = allData.filter(d => d.timestamp >= cutoffTime);
+    // If dataset is shorter than a year, use all data
+    const statsData = yearData.length > 0 ? yearData : allData;
+
+    let high1y = -Infinity;
+    let low1y = Infinity;
+    let highMarketCap1y = -Infinity;
+    
+    // Track dates for stats
+    let high1yDate = '';
+    let low1yDate = '';
+    let highMarketCap1yDate = '';
+
+    for (const d of statsData) {
+        if (d.high > high1y) {
+            high1y = d.high;
+            high1yDate = d.formattedTime;
+        }
+        if (d.low < low1y) {
+            low1y = d.low;
+            low1yDate = d.formattedTime;
+        }
+        if (d.marketCap > highMarketCap1y) {
+            highMarketCap1y = d.marketCap;
+            highMarketCap1yDate = d.formattedTime;
+        }
+    }
+    
+    // Safety check defaults
+    if (high1y === -Infinity) { 
+        high1y = latest.high; 
+        high1yDate = latest.formattedTime; 
+    }
+    if (low1y === Infinity) { 
+        low1y = latest.low; 
+        low1yDate = latest.formattedTime; 
+    }
+    if (highMarketCap1y === -Infinity) { 
+        highMarketCap1y = latest.marketCap; 
+        highMarketCap1yDate = latest.formattedTime; 
+    }
+
     return {
         currentPrice: latest.close,
         marketCap: latest.marketCap,
         volume24h: latest.volume,
         priceChangePercentage24h: priceChangePercent,
         high24h: latest.high,
-        low24h: latest.low
+        low24h: latest.low,
+        high1y,
+        low1y,
+        highMarketCap1y,
+        high1yDate,
+        low1yDate,
+        highMarketCap1yDate
     };
 };
 

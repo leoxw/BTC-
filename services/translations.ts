@@ -48,7 +48,13 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     errorCsv: "Local dataset error or empty.",
     errorImport: "Failed to import data. Please ensure the CSV format is correct.",
     importSuccess: "Dataset loaded successfully.",
-    days: "Days"
+    days: "Days",
+    statHigh1y: "1 Year High",
+    statLow1y: "1 Year Low",
+    statHighCap1y: "1Y Market Cap Peak",
+    descHigh1y: "Highest price in last 365 days",
+    descLow1y: "Lowest price in last 365 days",
+    descHighCap1y: "Highest valuation in last 365 days"
   },
   zh: {
     appTitle: "CryptoPulse BTC 之旅",
@@ -88,7 +94,13 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     errorCsv: "本地数据集错误或为空。",
     errorImport: "导入数据失败。请确保 CSV 格式正确。",
     importSuccess: "数据集加载成功。",
-    days: "天"
+    days: "天",
+    statHigh1y: "近一年最高",
+    statLow1y: "近一年最低",
+    statHighCap1y: "近一年市值峰值",
+    descHigh1y: "过去365天内最高价格",
+    descLow1y: "过去365天内最低价格",
+    descHighCap1y: "过去365天内最高市值"
   },
   ja: {
     appTitle: "CryptoPulse BTC ジャーニー",
@@ -128,7 +140,13 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     errorCsv: "ローカルデータセットのエラー、または空です。",
     errorImport: "データのインポートに失敗しました。CSV形式が正しいことを確認してください。",
     importSuccess: "データセットが正常に読み込まれました。",
-    days: "日"
+    days: "日",
+    statHigh1y: "過去1年最高値",
+    statLow1y: "過去1年最安値",
+    statHighCap1y: "1年時価総額ピーク",
+    descHigh1y: "過去365日間の最高価格",
+    descLow1y: "過去365日間の最安価格",
+    descHighCap1y: "過去365日間の最高時価総額"
   },
   es: {
     appTitle: "Viaje CryptoPulse BTC",
@@ -168,7 +186,13 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     errorCsv: "Error en dataset local o está vacío.",
     errorImport: "Error al importar datos. Asegúrese de que el formato CSV sea correcto.",
     importSuccess: "Dataset cargado con éxito.",
-    days: "Días"
+    days: "Días",
+    statHigh1y: "Máximo 1 Año",
+    statLow1y: "Mínimo 1 Año",
+    statHighCap1y: "Pico Cap. 1 Año",
+    descHigh1y: "Precio más alto en 365 días",
+    descLow1y: "Precio más bajo en 365 días",
+    descHighCap1y: "Mayor valoración en 365 días"
   },
   fr: {
     appTitle: "Voyage CryptoPulse BTC",
@@ -208,6 +232,12 @@ export const translations: Record<LanguageCode, Record<string, string>> = {
     errorCsv: "Erreur de jeu de données local ou vide.",
     errorImport: "Échec de l'importation. Veuillez vérifier le format CSV.",
     importSuccess: "Jeu de données chargé avec succès.",
-    days: "Jours"
+    days: "Jours",
+    statHigh1y: "Haut 1 An",
+    statLow1y: "Bas 1 An",
+    statHighCap1y: "Pic Cap. 1 An",
+    descHigh1y: "Plus haut des 365 derniers jours",
+    descLow1y: "Plus bas des 365 derniers jours",
+    descHighCap1y: "Plus haute val. des 365 derniers jours"
   }
 };

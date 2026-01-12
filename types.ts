@@ -12,6 +12,12 @@ export interface MarketStats {
   priceChangePercentage24h: number;
   marketCap: number;
   volume24h: number;
+  high1y: number;
+  low1y: number;
+  highMarketCap1y: number;
+  high1yDate?: string;
+  low1yDate?: string;
+  highMarketCap1yDate?: string;
 }
 
 export enum TimeRange {
