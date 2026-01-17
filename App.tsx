@@ -40,7 +40,11 @@ const App: React.FC = () => {
 
   // Check auth on mount
   useEffect(() => {
-    setIsAdminLoggedIn(isAuthenticated());
+    const checkAuth = async () => {
+      const authStatus = await isAuthenticated();
+      setIsAdminLoggedIn(authStatus);
+    };
+    checkAuth();
   }, []);
 
   const loadData = useCallback(async () => {
@@ -52,13 +56,12 @@ const App: React.FC = () => {
     setShowNews(false);
     
     try {
-        const [priceHistory, marketStats] = await Promise.all([
+        const [priceHistory, marketStats, news] = await Promise.all([
           fetchHistoricalData(range),
-          fetchMarketStats()
+          fetchMarketStats(),
+          getNewsEvents(lang)
         ]);
         
-        // Pass the current language to get translated news
-        const news = getNewsEvents(lang);
         setNewsEvents(news);
 
         if (priceHistory.length === 0) {

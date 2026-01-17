@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { changePassword, setSession } from '../services/authService';
-import { getNewsEvents, updateNewsData, getRawPriceData, uploadCustomData } from '../services/cryptoService';
+import { getNewsEvents, updateNewsData, uploadCustomData, fetchHistoricalData } from '../services/cryptoService';
 import { LanguageCode, languageNames } from '../services/translations';
 import { NewsEvent } from '../types';
 
@@ -66,30 +66,62 @@ const NewsManager: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentEvent, setCurrentEvent] = useState<NewsEvent>({ date: '', title: '', description: '', type: 'neutral' });
     const [editIndex, setEditIndex] = useState(-1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
     useEffect(() => {
-        setNews(getNewsEvents(selectedLang));
+        const loadNews = async () => {
+            setIsLoading(true);
+            try {
+                const newsData = await getNewsEvents(selectedLang);
+                setNews(newsData);
+            } catch (err) {
+                setErrorMsg('Failed to load news events');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadNews();
     }, [selectedLang]);
 
-    const handleSave = () => {
-        const updated = [...news];
-        if (editIndex >= 0) {
-            updated[editIndex] = currentEvent;
-        } else {
-            updated.push(currentEvent);
+    const handleSave = async () => {
+        setIsLoading(true);
+        setErrorMsg('');
+        
+        try {
+            const updated = [...news];
+            if (editIndex >= 0) {
+                updated[editIndex] = currentEvent;
+            } else {
+                updated.push(currentEvent);
+            }
+            updated.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+            
+            await updateNewsData(selectedLang, updated);
+            setNews(updated);
+            setIsEditing(false);
+            setEditIndex(-1);
+        } catch (err) {
+            setErrorMsg('Failed to save news event');
+        } finally {
+            setIsLoading(false);
         }
-        updated.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        setNews(updated);
-        updateNewsData(selectedLang, updated);
-        setIsEditing(false);
-        setEditIndex(-1);
     };
 
-    const handleDelete = (index: number) => {
+    const handleDelete = async (index: number) => {
         if(!confirm("Are you sure?")) return;
-        const updated = news.filter((_, i) => i !== index);
-        setNews(updated);
-        updateNewsData(selectedLang, updated);
+        setIsLoading(true);
+        setErrorMsg('');
+        
+        try {
+            const updated = news.filter((_, i) => i !== index);
+            await updateNewsData(selectedLang, updated);
+            setNews(updated);
+        } catch (err) {
+            setErrorMsg('Failed to delete news event');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const openEdit = (event: NewsEvent, index: number) => {
@@ -108,6 +140,8 @@ const NewsManager: React.FC = () => {
         <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Manage News</h2>
+                {errorMsg && <p className="text-rose-400 text-sm">{errorMsg}</p>}
+            </div>
                 <div className="flex gap-4">
                     <select 
                         value={selectedLang} 
@@ -165,31 +199,40 @@ const PriceManager: React.FC = () => {
     const [stats, setStats] = useState<any>({ count: 0, first: '', last: '' });
     const [csv, setCsv] = useState('');
     const [msg, setMsg] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        const data = getRawPriceData();
-        if(data.length > 0) {
-            setStats({
-                count: data.length,
-                first: data[0].dateString,
-                last: data[data.length-1].dateString
-            });
+    const loadStats = async () => {
+        try {
+            const data = await fetchHistoricalData('max');
+            if(data.length > 0) {
+                setStats({
+                    count: data.length,
+                    first: data[0].dateString,
+                    last: data[data.length-1].dateString
+                });
+            }
+        } catch (err) {
+            console.error('Failed to load stats:', err);
         }
+    };
+
+    useEffect(() => {
+        loadStats();
     }, []);
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
+        setIsLoading(true);
+        setMsg('');
         try {
-            uploadCustomData(csv);
-            const data = getRawPriceData();
-            setStats({
-                count: data.length,
-                first: data[0].dateString,
-                last: data[data.length-1].dateString
-            });
+            await uploadCustomData(csv);
+            await loadStats();
             setMsg("Success! Data updated.");
+            setCsv('');
         } catch(e: any) {
             setMsg("Error: " + e.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -236,7 +279,9 @@ const PriceManager: React.FC = () => {
                         className="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-4 font-mono text-xs focus:outline-none focus:border-orange-500 mb-2"
                     />
                     <div className="flex gap-3">
-                        <button onClick={handleUpload} className="bg-orange-600 hover:bg-orange-700 px-6 py-2 rounded-lg font-bold transition-colors">Process & Upload</button>
+                        <button onClick={handleUpload} disabled={isLoading} className="bg-orange-600 hover:bg-orange-700 px-6 py-2 rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            {isLoading ? 'Processing...' : 'Process & Upload'}
+                        </button>
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".csv" className="hidden" />
                         <button onClick={() => fileInputRef.current?.click()} className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg font-bold transition-colors">Load from File</button>
                     </div>
@@ -251,8 +296,9 @@ const SettingsManager: React.FC = () => {
     const [p1, setP1] = useState('');
     const [p2, setP2] = useState('');
     const [msg, setMsg] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleChange = () => {
+    const handleChange = async () => {
         if(p1 !== p2) {
             setMsg("Passwords do not match");
             return;
@@ -261,10 +307,21 @@ const SettingsManager: React.FC = () => {
              setMsg("Password too short");
              return;
         }
-        changePassword(p1);
-        setMsg("Password updated successfully.");
-        setP1('');
-        setP2('');
+        setIsLoading(true);
+        try {
+            const success = await changePassword(p1);
+            if(success) {
+                setMsg("Password updated successfully.");
+                setP1('');
+                setP2('');
+            } else {
+                setMsg("Failed to update password.");
+            }
+        } catch (err) {
+            setMsg("An error occurred.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -279,7 +336,9 @@ const SettingsManager: React.FC = () => {
                      <label className="block text-sm text-gray-400 mb-1">Confirm Password</label>
                      <input type="password" value={p2} onChange={e => setP2(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded p-2" />
                  </div>
-                 <button onClick={handleChange} className="bg-orange-600 px-4 py-2 rounded font-bold">Update Password</button>
+                  <button onClick={handleChange} disabled={isLoading} className="bg-orange-600 px-4 py-2 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+                    {isLoading ? 'Updating...' : 'Update Password'}
+                  </button>
                  {msg && <p className="text-sm text-yellow-400">{msg}</p>}
              </div>
         </div>

@@ -11,14 +11,25 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(user, pass)) {
-      setSession(true);
-      onLoginSuccess();
-    } else {
-      setError('Invalid username or password');
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const success = await login(user, pass);
+      if (success) {
+        setSession(true);
+        onLoginSuccess();
+      } else {
+        setError('Invalid username or password');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,8 +57,8 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBack }) => {
               className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
             />
           </div>
-          <button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg transition-colors">
-            Login
+          <button type="submit" disabled={isLoading} className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         <button onClick={onBack} className="w-full mt-4 text-gray-500 hover:text-gray-300 text-sm">
