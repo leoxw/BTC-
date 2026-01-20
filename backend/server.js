@@ -20,6 +20,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.get('/', (req, res) => {
+  res.send('BTC Backend API is running.');
+});
+
 app.listen(PORT, () => {
   console.log(`BTC Backend API server is running on port ${PORT}`);
 });

@@ -140,8 +140,6 @@ const NewsManager: React.FC = () => {
         <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Manage News</h2>
-                {errorMsg && <p className="text-rose-400 text-sm">{errorMsg}</p>}
-            </div>
                 <div className="flex gap-4">
                     <select 
                         value={selectedLang} 
@@ -154,6 +152,7 @@ const NewsManager: React.FC = () => {
                     </select>
                     <button onClick={openAdd} className="bg-emerald-600 hover:bg-emerald-700 px-4 py-1 rounded-lg text-sm font-bold">Add Event</button>
                 </div>
+                {errorMsg && <p className="text-rose-400 text-sm">{errorMsg}</p>}
             </div>
 
             {isEditing && (
